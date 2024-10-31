@@ -1,6 +1,7 @@
 import socketIOClient from "socket.io-client";
+import { useEffect } from 'react';
 
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = "http://localhost:8080"; //set environment variable here
 
 const Home = () => {
 
@@ -9,6 +10,32 @@ const Home = () => {
       <button onClick={createPrivateRoom}>Create Private Room</button>
     </div>
   );
+
+  useEffect(() => {
+    
+    const socket = socketIOClient(ENDPOINT);
+
+    setCurrentSocket(socket);
+  
+    socket.emit('joining-room', 1000);
+
+    socket.on('user-connected', () => {
+      console.log('a user connected');
+      setTestMsg("user-connected");
+    });
+
+    socket.on('user-disconnected', () => {
+      console.log('user disconnected');
+    });
+
+
+    //setRoomId(props.roomId);
+
+    return () => {
+      socket.disconnect(); //this is what happens when component unmounts
+    };
+    
+  },[]); //eventually need props.roomId once backend is set up
 };
 
 const createPrivateRoom = async () => {
@@ -31,34 +58,5 @@ const createPrivateRoom = async () => {
     }
 };
 
-useEffect(() => {
-    
-    const socket = socketIOClient(ENDPOINT);
-
-    setCurrentSocket(socket);
-  
-    socket.emit('joining-room', props.roomId);
-
-    socket.on('user-connected', () => {
-      console.log('a user connected');
-      setTestMsg("user-connected");
-    });
-
-    socket.on('user-disconnected', () => {
-      console.log('user disconnected');
-    });
-
-    socket.on('bpm-updated', (newBPM) => {
-      setBPM(newBPM);
-    });
-
-  
-    setRoomId(props.roomId);
-
-    return () => {
-      socket.disconnect();
-    };
-    
-  },[props.roomId]);
 
 export default Home;
