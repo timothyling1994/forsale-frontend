@@ -2,7 +2,7 @@ import styles from '../styles.module.css'
 import socketIOClient from "socket.io-client";
 import { useEffect, useState } from 'react'; 
 import { useRouter } from 'next/navigation';
-import { useGameContext } from './GameContext'
+import { useGameContext } from './gameContext'
 
 const GameConfigPage = () => {
 

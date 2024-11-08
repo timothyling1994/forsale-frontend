@@ -1,6 +1,7 @@
 import socketIOClient from "socket.io-client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useGameContext } from './gameContext'
 
 const Game = () => {
 
