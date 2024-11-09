@@ -22,4 +22,4 @@ export const useGameContext = () => {
       throw new Error('useGameContext must be used within a GameProvider');
     }
     return context;
-  };
+};

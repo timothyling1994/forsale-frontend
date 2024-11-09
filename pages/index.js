@@ -8,9 +8,20 @@ const Home = () => {
 
   const router = useRouter();
 
-  const createPrivateRoom = async () => {
-    console.log("reach");
+  const createPublicRoom = () => {
+    console.log("Create Public Room");
+  };
 
+  const joinPublicRoom = () => {
+    console.log("Join Public Room");
+  };
+
+  const joinPrivateRoom = () => {
+    console.log("Join Private Room");
+  }; 
+
+  const createPrivateRoom = async () => {
+  
     const data = {
       userId: '123',
       socketId: 'abc'
@@ -31,7 +42,8 @@ const Home = () => {
       console.log(response);
       if(response.createdRoom)
       {
-        router.push('/gameConfig');
+        console.log("here");
+        router.push('/game'); //router.push('/gameConfig');
       }
     }
     catch(e){
@@ -43,7 +55,11 @@ const Home = () => {
   return (
     <div>
       <button onClick={createPrivateRoom}>Create Private Room</button>
+      <button onClick={createPublicRoom}>Create Public Room</button>
+      <button onClick={joinPrivateRoom}>Join Private Room</button>
+      <button onClick={joinPublicRoom}>Join Public Room</button>
     </div>
+    
   );
 
   useEffect(() => {

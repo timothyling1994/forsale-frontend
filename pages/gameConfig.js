@@ -11,7 +11,9 @@ const GameConfigPage = () => {
 
   //look into createContext and useContext for passing data between pages
 
+    
   const handleStartGame = () => {
+
     router.push('/game');
   };
   

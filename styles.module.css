@@ -1,3 +1,47 @@
+#game-main-container{
+	display: flex;
+	justify-content: center;
+	min-height: 100vh; 
+	width: 100%; /* Adjust as needed */
+	flex-direction: column;
+	margin: 0;
+	background-color: black;
+	overflow:hidden;
+}
+
+.section{
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex:1;
+
+}
+
+#game-top-section{
+	background-color: green;
+	justify-content: space-between; /* This spaces items evenly */
+    padding: 0 15vw;
+}
+
+#game-middle-section{
+	background-color: blue;
+	justify-content: space-between;
+	padding: 0 2vw;
+}
+
+#game-bottom-section{
+	background-color: red;
+}
+  
+.player {
+	width: 10vw;
+	height: 50%;
+	background-color: pink;
+	border: 1px solid black;
+	padding: 1vw;
+}
+
 #game-config-container{
 	width: 75%;
 	display: flex;
