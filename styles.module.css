@@ -1,3 +1,63 @@
+@font-face {
+    font-family: 'KnightWarrior';  /* This is the name you'll use to reference it */
+    src: url('/fonts/knight-warrior-font/KnightWarrior-w16n8.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#home-main-container{
+	display: flex;
+	justify-content: flex-start;
+	min-height: 100vh; 
+	width: 100%; /* Adjust as needed */
+	flex-direction: column;
+	margin: 0;
+	overflow:hidden;
+}
+
+#home-top-section{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	height: 33%;
+	padding: 10vh
+
+}
+
+#home-title{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'KnightWarrior';
+	font-size: 10em;
+}
+
+#home-button-container{
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.home-buttons{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'KnightWarrior';
+	font-size: 1.7em;
+	width: 20vw;
+	border-radius: 1vw;
+	background-color: rgb(232, 226, 228);
+	border: 0.1em solid black;
+	padding: 2vw;
+	margin: 0.2vw;
+	transition: background-color 0.3s ease;
+}
+
+.home-buttons:hover{
+	background-color: rgb(200, 195, 197); /* Darker shade when hovering */
+    cursor: pointer; /* Changes cursor to hand pointer */
+}
 #game-main-container{
 	display: flex;
 	justify-content: center;
@@ -5,7 +65,6 @@
 	width: 100%; /* Adjust as needed */
 	flex-direction: column;
 	margin: 0;
-	background-color: black;
 	overflow:hidden;
 }
 
@@ -19,27 +78,57 @@
 }
 
 #game-top-section{
-	background-color: green;
 	justify-content: space-between; /* This spaces items evenly */
+	height: 33%;
     padding: 0 15vw;
 }
 
 #game-middle-section{
-	background-color: blue;
 	justify-content: space-between;
+	height: 33%;
 	padding: 0 2vw;
 }
 
 #game-bottom-section{
-	background-color: red;
+	height: 33%;
 }
   
-.player {
-	width: 10vw;
+.join-button{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 7vw;
 	height: 50%;
-	background-color: pink;
-	border: 1px solid black;
-	padding: 1vw;
+	font-family: var(--font-fredoka);
+	font-size: 2em;
+	border-radius: 1vw;
+	background-color: rgb(232, 226, 228);
+	border: 0.1em solid black;
+	padding: 2vw;
+	transition: background-color 0.3s ease;
+	
+}
+
+.join-button:hover {
+    background-color: rgb(200, 195, 197); /* Darker shade when hovering */
+    cursor: pointer; /* Changes cursor to hand pointer */
+}
+
+.player{
+	
+	
+}
+
+.money{
+	width: 7vw;
+	height: 14vh;
+}
+
+.money-text{
+	font-size: 1.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #game-config-container{

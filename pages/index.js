@@ -1,6 +1,7 @@
 import socketIOClient from "socket.io-client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from '../styles.module.css'
 
 const ENDPOINT = "http://localhost:8080"; //set environment variable here
 
@@ -53,11 +54,13 @@ const Home = () => {
 
 
   return (
-    <div>
-      <button onClick={createPrivateRoom}>Create Private Room</button>
-      <button onClick={createPublicRoom}>Create Public Room</button>
-      <button onClick={joinPrivateRoom}>Join Private Room</button>
-      <button onClick={joinPublicRoom}>Join Public Room</button>
+    <div id = {styles['home-main-container']}>
+      <div id = {styles['home-top-section']}>
+        <div id = {styles['home-title']}>UP FOR SALE</div>
+      </div>
+      <div id = {styles['home-button-container']}>
+        <button className = {styles['home-buttons']} onClick={createPrivateRoom}>Create Private Room</button>
+      </div>
     </div>
     
   );

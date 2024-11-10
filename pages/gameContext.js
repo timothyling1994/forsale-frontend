@@ -5,12 +5,18 @@ const GameContext = createContext();
 export function GameProvider({ children }) {
     
   const [gameConfig, setGameConfig] = useState({
-    numPlayers: 3,
-    numTokens: 15
+    numPlayers: 6,
+    numTokens: 15,
+    tokenArray: [0,0,0,0,0,0],
+    gameStart: false
   });
 
+
   return (
-    <GameContext.Provider value={{ gameConfig, setGameConfig }}>
+    <GameContext.Provider value={{
+        gameConfig,
+        setGameConfig    
+    }}>
       {children}
     </GameContext.Provider>
   );

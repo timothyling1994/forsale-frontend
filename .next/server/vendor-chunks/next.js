@@ -21,6 +21,16 @@ eval("/**\n * Hoists a name from a module or promised module.\n *\n * @param mod
 
 /***/ }),
 
+/***/ "./node_modules/next/font/google/target.css?{\"path\":\"pages/_app.js\",\"import\":\"Fredoka\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"400\",\"700\"],\"display\":\"swap\"}],\"variableName\":\"fredoka\"}":
+/*!***************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/font/google/target.css?{"path":"pages/_app.js","import":"Fredoka","arguments":[{"subsets":["latin"],"weight":["400","700"],"display":"swap"}],"variableName":"fredoka"} ***!
+  \***************************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Fredoka_712461', '__Fredoka_Fallback_712461'\",\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_712461\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcInBhZ2VzL19hcHAuanNcIixcImltcG9ydFwiOlwiRnJlZG9rYVwiLFwiYXJndW1lbnRzXCI6W3tcInN1YnNldHNcIjpbXCJsYXRpblwiXSxcIndlaWdodFwiOltcIjQwMFwiLFwiNzAwXCJdLFwiZGlzcGxheVwiOlwic3dhcFwifV0sXCJ2YXJpYWJsZU5hbWVcIjpcImZyZWRva2FcIn0iLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBLFdBQVcsb0ZBQW9GO0FBQy9GO0FBQ0EiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9mb3JzYWxlLWZyb250ZW5kLy4vbm9kZV9tb2R1bGVzL25leHQvZm9udC9nb29nbGUvdGFyZ2V0LmNzcz9mM2UzIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIEV4cG9ydHNcbm1vZHVsZS5leHBvcnRzID0ge1xuXHRcInN0eWxlXCI6IHtcImZvbnRGYW1pbHlcIjpcIidfX0ZyZWRva2FfNzEyNDYxJywgJ19fRnJlZG9rYV9GYWxsYmFja183MTI0NjEnXCIsXCJmb250U3R5bGVcIjpcIm5vcm1hbFwifSxcblx0XCJjbGFzc05hbWVcIjogXCJfX2NsYXNzTmFtZV83MTI0NjFcIlxufTtcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/next/font/google/target.css?{\"path\":\"pages/_app.js\",\"import\":\"Fredoka\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"400\",\"700\"],\"display\":\"swap\"}],\"variableName\":\"fredoka\"}\n");
+
+/***/ }),
+
 /***/ "./node_modules/next/dist/client/components/bailout-to-client-rendering.js":
 /*!*********************************************************************************!*\
   !*** ./node_modules/next/dist/client/components/bailout-to-client-rendering.js ***!
