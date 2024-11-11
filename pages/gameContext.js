@@ -8,7 +8,8 @@ export function GameProvider({ children }) {
     numPlayers: 6,
     numTokens: 15,
     tokenArray: [0,0,0,0,0,0],
-    gameStart: false
+    gameStart: false,
+    roomId: null
   });
 
 

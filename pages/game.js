@@ -6,11 +6,25 @@ import styles from '../styles.module.css'
 
 const Game = () => {
 
-  const { gameConfig } = useGameContext();
-  const { tokenArray } = gameConfig;
+  const { gameConfig, setGameConfig } = useGameContext();
+  const { tokenArray, roomUrl } = gameConfig;
 
   const joinPrivateRoom = () => {
     console.log("Join Private Room");
+  }
+
+  const shareLink = () => {
+    const currentUrl = roomUrl;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(currentUrl)
+        .then(() => {
+            alert(currentUrl);
+            // Or use a more elegant notification system
+        })
+        .catch((err) => {
+            console.error('Failed to copy link:', err);
+    });
   }
   
   return (
@@ -22,6 +36,10 @@ const Game = () => {
         </div>
         <div id = {styles['game-middle-section']} className = {styles['section']}>
           <div id = {styles['player-2']} className={styles['join-button']} onClick = {joinPrivateRoom}>Join</div>
+          <div id = {styles['share-link-container']}>
+            <div id = {styles['share-link']}>Share this link with your friends:</div>
+            <div id = {styles['share-link-button']} onClick = {shareLink}>Copy Link</div>
+          </div>
           <div id = {styles['player-3']} className={styles['join-button']} onClick = {joinPrivateRoom}>Join</div>
         </div>
         <div id = {styles['game-bottom-section']} className = {styles['section']}>

@@ -2,12 +2,15 @@ import socketIOClient from "socket.io-client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../styles.module.css'
+import { useGameContext } from './gameContext'
 
 const ENDPOINT = "http://localhost:8080"; //set environment variable here
 
 const Home = () => {
 
   const router = useRouter();
+  const { gameConfig, setGameConfig } = useGameContext();
+
 
   const createPublicRoom = () => {
     console.log("Create Public Room");
@@ -40,10 +43,12 @@ const Home = () => {
 
       });
       response = await response.json();
-      console.log(response);
       if(response.createdRoom)
       {
-        console.log("here");
+        setGameConfig(prev => ({
+          ...prev,
+          roomUrl: ENDPOINT + '/' + response.roomId
+        }));
         router.push('/game'); //router.push('/gameConfig');
       }
     }
