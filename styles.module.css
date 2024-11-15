@@ -28,7 +28,7 @@
 	display:flex;
 	justify-content: center;
 	align-items: center;
-	font-family: 'KnightWarrior';
+	font-family: var(--font-fredoka);
 	font-size: 10em;
 }
 
@@ -57,7 +57,7 @@
 	font-size: 1.5em;
 	border-radius: 1vw;
 	background-color: rgba(24, 252, 8, 0.834);
-	border: 0.1em solid black;
+	border: 0.13em solid black;
 	padding: 0.9vw;
 	margin: 1.2vh;
 	transition: background-color 0.3s ease;
@@ -79,13 +79,13 @@
 	display:flex;
 	justify-content: center;
 	align-items: center;
-	font-family: 'KnightWarrior';
+	font-family: var(--font-fredoka);
 	font-size: 1.7em;
 	width: 20vw;
 	border-radius: 1vw;
 	background-color: rgb(232, 226, 228);
 	border: 0.1em solid black;
-	padding: 2vw;
+	padding: 1.2vw;
 	margin: 0.2vw;
 	transition: background-color 0.3s ease;
 }
@@ -154,6 +154,15 @@
     cursor: pointer; /* Changes cursor to hand pointer */
 }
 
+#for-sale-home-button-container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: var(--font-fredoka);
+	font-size: 1.5em;
+	border: 0.1em solid black;
+}
+
 #player-1-container{
 	display: flex;
 	position: relative;
@@ -169,7 +178,7 @@
 	padding: 1em;
 }
 
-.text-bubble {
+#admin-game-config-text-bubble {
 	position: absolute;
     display:flex;
     left: 120%;
@@ -179,7 +188,7 @@
     border-radius: 10px;
     padding: 1em;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    height: 20vh;
+    height: 24vh;
 	width: 15vw;
 	z-index: 1000;
 	color: black;
@@ -188,7 +197,7 @@
 
 }
 
-.text-bubble::after {
+#admin-game-config-text-bubble::after {
     content: '';
     position: absolute;
     left: -20px;           /* Position outside bubble */
@@ -202,7 +211,7 @@
 }
 
 /* Inner arrow (white fill) */
-.text-bubble::before {
+#admin-game-config-text-bubble::before {
     content: '';
     position: absolute;
     left: -17px;          /* Slightly to the right of outer arrow */
@@ -233,10 +242,11 @@
 	font-size: 1.5em;
 	border-radius: 1vw;
 	background-color: rgb(232, 226, 228);
-	border: 0.1em solid black;
+	border: 0.13em solid black;
 	padding: 0.5vw;
 	background-color: rgba(24, 252, 8, 0.834);
 	transition: background-color 0.3s ease;
+	margin: 1vw;
 }
 
 #game-start-button:hover{

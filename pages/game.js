@@ -7,14 +7,20 @@ import styles from '../styles.module.css'
 const Game = () => {
 
   const { gameConfig, setGameConfig } = useGameContext();
-  const { tokenArray, setTokenArray, roomUrl, gameStart, setGameStart } = gameConfig;
+  const { tokenArray, setTokenArray, roomUrl, gameStart, setGameStart, isAdmin } = gameConfig;
   const [ copied, setCopied ] = useState(false);
+  const [tokenCount, setTokenCount] = useState(15);
 
   const joinPrivateRoom = () => {
     console.log("Join Private Room");
   }
 
   const startGame = () => {
+    setGameConfig(prev => ({
+      ...prev,
+      numTokens: tokenCount,
+      tokenArray: Array(4).fill(tokenCount)
+    }));
     console.log("Start Game");
   }
 
@@ -36,7 +42,12 @@ const Game = () => {
             console.error('Failed to copy link:', err);
     });
   }
-  
+
+  const handleTokenChange = (e) => {
+    const value = parseInt(e.target.value) || 0;
+    setTokenCount(Math.max(0, value));
+  };
+
   return (
     <div id = {styles['game-main-container']}>
         <div id = {styles['game-top-section']} className = {styles['section']}>
@@ -60,13 +71,38 @@ const Game = () => {
               <img src="/images/money.png" alt="Logo" className = {styles['money']}/>
               <div id = {styles['player-1-money']} className = {styles['money-text']}>{tokenArray?.[0] ?? 1} Tokens</div>
             </div>
-            <div className = {styles['text-bubble']}>
-              <div id = {styles['text-bubble-text']}>Admin Game Config</div>
-              <div id = {styles['text-bubble-text']}># of tokens per player:</div>
+            { isAdmin && (
+            <div id = {styles['admin-game-config-text-bubble']}>
+              <div id = {styles['text-bubble-text']}>Game Config:</div>
+              <div id = {styles['text-bubble-text']}>
+                # of tokens per player:
+                <div className={styles['token-input-container']}>
+                  <button 
+                    className={styles['token-button']} 
+                    onClick={() => setTokenCount(Math.max(8, tokenCount - 1))}
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={tokenCount}
+                    onChange={handleTokenChange}
+                    className={styles['token-input']}
+                    min="0"
+                  />
+                  <button 
+                    className={styles['token-button']} 
+                    onClick={() => setTokenCount(tokenCount + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
               <div id = {styles['game-start-button-container']}>
                 <div id = {styles['game-start-button']} onClick = {startGame}>Game Start</div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

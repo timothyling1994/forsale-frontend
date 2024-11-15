@@ -1,8 +1,9 @@
 import socketIOClient from "socket.io-client";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../styles.module.css'
-import { useGameContext } from './gameContext'
+import styles from '../styles.module.css';
+import { useGameContext } from './gameContext';
+import { useSocket } from './socketContext';
 
 const ENDPOINT = "http://localhost:8080"; //set environment variable here
 
@@ -10,6 +11,21 @@ const Home = () => {
 
   const router = useRouter();
   const { gameConfig, setGameConfig } = useGameContext();
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.emit('socket-connecting', 1000);
+
+    socket.on('user-disconnected', () => {
+      console.log('user disconnected');
+    });
+
+    return () => {
+      socket.off('user-disconnected');
+    };
+  }, [socket]);
 
 
   const createPublicRoom = () => {
@@ -47,7 +63,9 @@ const Home = () => {
       {
         setGameConfig(prev => ({
           ...prev,
-          roomUrl: ENDPOINT + '/' + response.roomId
+          roomId: response.roomId,
+          roomUrl: ENDPOINT + '/' + response.roomId,
+          isAdmin: true
         }));
         router.push('/game'); //router.push('/gameConfig');
       }
@@ -65,36 +83,12 @@ const Home = () => {
       </div>
       <div id = {styles['home-button-container']}>
         <button className = {styles['home-buttons']} onClick={createPrivateRoom}>Create Private Room</button>
+        <button className = {styles['home-buttons']} onClick={createPublicRoom}>Create Public Room</button>
+        <button className = {styles['home-buttons']} onClick={joinPublicRoom}>Join Public Room</button>
       </div>
     </div>
     
   );
-
-  useEffect(() => {
-    
-    const socket = socketIOClient(ENDPOINT);
-
-    setCurrentSocket(socket);
-  
-    socket.emit('joining-room', 1000);
-
-    socket.on('user-connected', () => {
-      console.log('a user connected');
-      setTestMsg("user-connected");
-    });
-
-    socket.on('user-disconnected', () => {
-      console.log('user disconnected');
-    });
-
-
-    //setRoomId(props.roomId);
-
-    return () => {
-      socket.disconnect(); //this is what happens when component unmounts
-    };
-    
-  },[]); //eventually need props.roomId once backend is set up
 };
 
 

@@ -1,6 +1,7 @@
 import '../globals.css'
 import { Fredoka } from 'next/font/google';
 import { GameProvider } from './gameContext';
+import { SocketProvider } from './socketContext';
 
 
 const fredoka = Fredoka({
@@ -13,9 +14,11 @@ const fredoka = Fredoka({
 function MyApp({ Component, pageProps }) {
   return (
     <main className={fredoka.className}>
+      <SocketProvider>
       <GameProvider lang="en">
         <Component {...pageProps} />
-      </GameProvider>
+        </GameProvider>
+      </SocketProvider>
     </main>
   );
 }
