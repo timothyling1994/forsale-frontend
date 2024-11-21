@@ -64,10 +64,10 @@ const Home = () => {
         setGameConfig(prev => ({
           ...prev,
           roomId: response.roomId,
-          roomUrl: ENDPOINT + '/' + response.roomId,
+          roomUrl: ENDPOINT + '/game/' + response.roomId,
           isAdmin: true
         }));
-        router.push('/game'); //router.push('/gameConfig');
+        router.push(`/game/${response.roomId}`);
       }
     }
     catch(e){
