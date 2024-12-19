@@ -5,7 +5,7 @@ import styles from '../styles.module.css';
 import { useGameContext } from './gameContext';
 import { useSocket } from './socketContext';
 
-const ENDPOINT = "http://localhost:8080"; //set environment variable here
+const ENDPOINT = "http://localhost:3000"; //set environment variable here
 
 const Home = () => {
 
