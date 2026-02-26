@@ -1,4 +1,3 @@
-import socketIOClient from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../styles.module.css';
@@ -41,10 +40,14 @@ const Home = () => {
   }; 
 
   const createPrivateRoom = async () => {
+    if (!socket || !socket.id) {
+      console.error('Socket not connected');
+      return;
+    }
   
     const data = {
       userId: '123',
-      socketId: 'abc'
+      socketId: socket.id
     };
 
     try {

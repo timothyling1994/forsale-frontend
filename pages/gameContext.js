@@ -6,8 +6,7 @@ export function GameProvider({ children }) {
     
   const [gameConfig, setGameConfig] = useState({
     numPlayers: 6,
-    numTokens: 15,
-    tokenArray: [0,0,0,0,0,0],
+    minLetterPerWord: 4,
     gameStart: false,
     roomId: null,
     isAdmin: false

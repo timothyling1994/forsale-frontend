@@ -1,18 +1,32 @@
-import socketIOClient from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
 import { useGameContext } from '../gameContext'
+import { useSocket } from '../socketContext'
 import styles from '../../styles.module.css'
 
 const Game = () => {
 
   const { gameConfig, setGameConfig } = useGameContext();
-  const { tokenArray, setTokenArray, roomUrl, gameStart, setGameStart, isAdmin } = gameConfig;
+  const { minLetterPerWord, gameStart, isAdmin } = gameConfig;
+  const socket = useSocket();
   const [ copied, setCopied ] = useState(false);
-  const [ tokenCount, setTokenCount ] = useState(15);
+  const [ minLocalLetterPerWord, setMinLocalLetterPerWord ] = useState(4);
   const [ roomId, setRoomId] = useState(null);
   const [ playerJoined, setPlayerJoined ] = useState(false);
   const [ playerPosition, setPlayerPosition ] = useState(null);
+  const [ joinedPlayers, setJoinedPlayers ] = useState(() => new Set());
+  const [ userId ] = useState(() => {
+    // Get or create userId from localStorage
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('forsale_userId');
+      if (stored) return stored;
+      const newId = uuidv4();
+      localStorage.setItem('forsale_userId', newId);
+      return newId;
+    }
+    return uuidv4();
+  });
 
   const router = useRouter();
 
@@ -30,13 +44,42 @@ const Game = () => {
     console.log("RoomId updated",roomId);
   }, [roomId]);
 
+  // Listen for playerJoined events from the backend
+  useEffect(() => {
+    if (!socket) return;
+
+    const handlePlayerJoined = (data) => {
+      console.log("Player joined event received:", data);
+      if (data.playerPosition !== undefined) {
+        setJoinedPlayers(prev => new Set(prev).add(data.playerPosition));
+      }
+    };
+
+    socket.on('playerJoined', handlePlayerJoined);
+
+    return () => {
+      socket.off('playerJoined', handlePlayerJoined);
+    };
+  }, [socket]);
+
   const joinPrivateRoom = async(playerPosition) => {
     console.log("Joining Private Room");
 
+    if (!socket || !socket.id) {
+      console.error('Socket not connected');
+      return;
+    }
+
+    // Prevent joining if user already joined or position is taken
+    if (playerJoined || joinedPlayers.has(playerPosition)) {
+      console.log('Cannot join: already joined or position taken');
+      return;
+    }
+
     const data = {
       roomId: roomId,
-      userId: '789',
-      socketId: 'xyz',
+      userId: userId,
+      socketId: socket.id,
       playerPosition: playerPosition
     };
 
@@ -57,6 +100,8 @@ const Game = () => {
         console.log("Player joined");
         setPlayerJoined(true);
         setPlayerPosition(playerPosition);
+        // Also update joinedPlayers for this position
+        setJoinedPlayers(prev => new Set(prev).add(playerPosition));
       }
       else{
         console.log(response.message);
@@ -70,8 +115,8 @@ const Game = () => {
   const startGame = () => {
     setGameConfig(prev => ({
       ...prev,
-      numTokens: tokenCount,
-      tokenArray: Array(4).fill(tokenCount)
+      minLetterPerWord: minLocalLetterPerWord,
+      gameStart: true
     }));
     console.log("Start Game");
   }
@@ -79,10 +124,13 @@ const Game = () => {
   const shareLink = () => {
     let currentUrl;
     
-    if (roomUrl !== null){
-      currentUrl = roomUrl;
+    if (roomId) {
+      // Construct URL from roomId
+      const ENDPOINT = "http://localhost:3000";
+      currentUrl = `${ENDPOINT}/game/${roomId}`;
     } else {
-      currentUrl = roomId;
+      console.error('No room ID available');
+      return;
     }
     
     // Copy to clipboard
@@ -101,32 +149,32 @@ const Game = () => {
     });
   }
 
-  const handleTokenChange = (e) => {
+  const handleMinLetterPerWordChange = (e) => {
     const value = parseInt(e.target.value) || 0;
-    setTokenCount(Math.max(0, value));
+    setMinLocalLetterPerWord(Math.max(0, value));
   };
 
   return (
     <div id = {styles['game-main-container']}>
         <div id = {styles['game-top-section']} className = {styles['section']}>
-          { !playerJoined ? (
+          { !joinedPlayers.has(3) && !playerJoined ? (
             <div id = {styles['player-3']} className={styles['join-button']} onClick = {() => joinPrivateRoom(3)}>Join</div>
           ) : (
             <div id = {styles['player-3']} className={styles['join-button']}>Joined</div>
           )}
-          { !playerJoined ? (
+          { !joinedPlayers.has(4) && !playerJoined ? (
             <div id = {styles['player-4']} className={styles['join-button']} onClick = {() => joinPrivateRoom(4)}>Join</div>
           ) : (
             <div id = {styles['player-4']} className={styles['join-button']}>Joined</div>
           )}
-          { !playerJoined ? (
+          { !joinedPlayers.has(5) && !playerJoined ? (
             <div id = {styles['player-5']} className={styles['join-button']} onClick = {() => joinPrivateRoom(5)}>Join</div>
           ) : (
             <div id = {styles['player-5']} className={styles['join-button']}>Joined</div>
           )}
         </div>
         <div id = {styles['game-middle-section']} className = {styles['section']}>
-          { !playerJoined ? (
+          { !joinedPlayers.has(1) && !playerJoined ? (
             <div id = {styles['player-1']} className={styles['join-button']} onClick = {() => joinPrivateRoom(1)}>Join</div>
           ) : (
             <div id = {styles['player-1']} className={styles['join-button']}>Joined</div>
@@ -137,7 +185,7 @@ const Game = () => {
               {copied ? 'Linked Copied!' : 'Copy Link'}
             </div>
           </div>
-          { !playerJoined ? (
+          { !joinedPlayers.has(2) && !playerJoined ? (
             <div id = {styles['player-2']} className={styles['join-button']} onClick = {() => joinPrivateRoom(2)}>Join</div>
           ) : (
             <div id = {styles['player-2']} className={styles['join-button']}>Joined</div>
@@ -147,30 +195,30 @@ const Game = () => {
           <div id = {styles['player-0-container']}>
             <div id = {styles['player-0']} className = {styles['player']}>
               <img src="/images/money.png" alt="Logo" className = {styles['money']}/>
-              <div id = {styles['player-0-money']} className = {styles['money-text']}>{tokenArray?.[0] ?? 1} Tokens</div>
+              <div id = {styles['player-0-money']} className = {styles['money-text']}>Admin</div>
             </div>
             { isAdmin && (
             <div id = {styles['admin-game-config-text-bubble']}>
               <div id = {styles['text-bubble-text']}>Game Config:</div>
               <div id = {styles['text-bubble-text']}>
-                # of tokens per player:
-                <div className={styles['token-input-container']}>
+                Minimum # of letters per word:
+                <div className={styles['min-letter-per-word-input-container']}>
                   <button 
-                    className={styles['token-button']} 
-                    onClick={() => setTokenCount(Math.max(8, tokenCount - 1))}
+                    className={styles['num-letters-per-word-button']} 
+                    onClick={() => setMinLocalLetterPerWord(Math.max(3, minLocalLetterPerWord - 1))}
                   >
                     -
                   </button>
                   <input
                     type="number"
-                    value={tokenCount}
-                    onChange={handleTokenChange}
-                    className={styles['token-input']}
+                    value={minLocalLetterPerWord}
+                    onChange={handleMinLetterPerWordChange}
+                    className={styles['min-letter-per-word-input']}
                     min="0"
                   />
                   <button 
-                    className={styles['token-button']} 
-                    onClick={() => setTokenCount(tokenCount + 1)}
+                    className={styles['num-letters-per-word-button']} 
+                    onClick={() => setMinLocalLetterPerWord(minLocalLetterPerWord + 1)}
                   >
                     +
                   </button>
