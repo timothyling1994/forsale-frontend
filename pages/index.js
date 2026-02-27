@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 import styles from '../styles.module.css';
 import { useGameContext } from './gameContext';
 import { useSocket } from './socketContext';
@@ -11,6 +12,17 @@ const Home = () => {
   const router = useRouter();
   const { gameConfig, setGameConfig } = useGameContext();
   const socket = useSocket();
+  const [ userId ] = useState(() => {
+    // Get or create userId from localStorage
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('forsale_userId');
+      if (stored) return stored;
+      const newId = uuidv4();
+      localStorage.setItem('forsale_userId', newId);
+      return newId;
+    }
+    return uuidv4();
+  });
 
   useEffect(() => {
     if (!socket) return;
@@ -46,8 +58,9 @@ const Home = () => {
     }
   
     const data = {
-      userId: '123',
-      socketId: socket.id
+      userId: userId,
+      socketId: socket.id,
+      isAdmin: true
     };
 
     try {

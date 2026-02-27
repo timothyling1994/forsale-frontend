@@ -98,7 +98,7 @@ const Game = () => {
       if(response.roomUpdated)
       {
         console.log("Player joined");
-        setPlayerJoined(true);
+        //setPlayerJoined(true);
         setPlayerPosition(playerPosition);
         // Also update joinedPlayers for this position
         setJoinedPlayers(prev => new Set(prev).add(playerPosition));
@@ -157,24 +157,24 @@ const Game = () => {
   return (
     <div id = {styles['game-main-container']}>
         <div id = {styles['game-top-section']} className = {styles['section']}>
-          { !joinedPlayers.has(3) && !playerJoined ? (
+          { !joinedPlayers.has(3) ? (
             <div id = {styles['player-3']} className={styles['join-button']} onClick = {() => joinPrivateRoom(3)}>Join</div>
           ) : (
             <div id = {styles['player-3']} className={styles['join-button']}>Joined</div>
           )}
-          { !joinedPlayers.has(4) && !playerJoined ? (
+          { !joinedPlayers.has(4) ? (
             <div id = {styles['player-4']} className={styles['join-button']} onClick = {() => joinPrivateRoom(4)}>Join</div>
           ) : (
             <div id = {styles['player-4']} className={styles['join-button']}>Joined</div>
           )}
-          { !joinedPlayers.has(5) && !playerJoined ? (
+          { !joinedPlayers.has(5) ? (
             <div id = {styles['player-5']} className={styles['join-button']} onClick = {() => joinPrivateRoom(5)}>Join</div>
           ) : (
             <div id = {styles['player-5']} className={styles['join-button']}>Joined</div>
           )}
         </div>
         <div id = {styles['game-middle-section']} className = {styles['section']}>
-          { !joinedPlayers.has(1) && !playerJoined ? (
+          { !joinedPlayers.has(1) ? (
             <div id = {styles['player-1']} className={styles['join-button']} onClick = {() => joinPrivateRoom(1)}>Join</div>
           ) : (
             <div id = {styles['player-1']} className={styles['join-button']}>Joined</div>
@@ -185,7 +185,7 @@ const Game = () => {
               {copied ? 'Linked Copied!' : 'Copy Link'}
             </div>
           </div>
-          { !joinedPlayers.has(2) && !playerJoined ? (
+          { !joinedPlayers.has(2) ? (
             <div id = {styles['player-2']} className={styles['join-button']} onClick = {() => joinPrivateRoom(2)}>Join</div>
           ) : (
             <div id = {styles['player-2']} className={styles['join-button']}>Joined</div>
