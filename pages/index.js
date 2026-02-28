@@ -29,7 +29,7 @@ const Home = () => {
 
     socket.emit('socket-connecting', 1000);
 
-    socket.on('user-disconnected', () => {
+    socket.on('disconnect', () => {
       console.log('user disconnected');
     });
 

@@ -44,6 +44,29 @@ const Game = () => {
     console.log("RoomId updated",roomId);
   }, [roomId]);
 
+  // Fetch existing players when the page loads via socket
+  useEffect(() => {
+    if (!roomId || !socket) return;
+
+    // Ask the server for current players in the room
+    socket.emit('getPlayersInRoom', { roomId });
+
+    // Listen for the server's response
+    const handleRoomPlayers = (data) => {
+      console.log("Received room players:", data);
+      if (data.players) {
+        const positions = new Set(data.players.map(player => player.playerPosition));
+        setJoinedPlayers(positions);
+      }
+    };
+
+    socket.on('playersInRoomResponse', handleRoomPlayers);
+
+    return () => {
+      socket.off('playersInRoomResponse', handleRoomPlayers);
+    };
+  }, [roomId, socket]);
+
   // Listen for playerJoined events from the backend
   useEffect(() => {
     if (!socket) return;
@@ -79,7 +102,6 @@ const Game = () => {
     const data = {
       roomId: roomId,
       userId: userId,
-      socketId: socket.id,
       playerPosition: playerPosition
     };
 
@@ -98,7 +120,8 @@ const Game = () => {
       if(response.roomUpdated)
       {
         console.log("Player joined");
-        //setPlayerJoined(true);
+        socket.emit('playerJoined', { roomId, userId, playerPosition });
+        setPlayerJoined(true);
         setPlayerPosition(playerPosition);
         // Also update joinedPlayers for this position
         setJoinedPlayers(prev => new Set(prev).add(playerPosition));
@@ -157,27 +180,27 @@ const Game = () => {
   return (
     <div id = {styles['game-main-container']}>
         <div id = {styles['game-top-section']} className = {styles['section']}>
-          { !joinedPlayers.has(3) ? (
+          { !joinedPlayers.has(3) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-3']} className={styles['join-button']} onClick = {() => joinPrivateRoom(3)}>Join</div>
           ) : (
-            <div id = {styles['player-3']} className={styles['join-button']}>Joined</div>
+            <div id = {styles['player-3']} className={styles['join-button']}>{joinedPlayers.has(3) ? 'Joined' : 'Open'}</div>
           )}
-          { !joinedPlayers.has(4) ? (
+          { !joinedPlayers.has(4) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-4']} className={styles['join-button']} onClick = {() => joinPrivateRoom(4)}>Join</div>
           ) : (
-            <div id = {styles['player-4']} className={styles['join-button']}>Joined</div>
+            <div id = {styles['player-4']} className={styles['join-button']}>{joinedPlayers.has(4) ? 'Joined' : 'Open'}</div>
           )}
-          { !joinedPlayers.has(5) ? (
+          { !joinedPlayers.has(5) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-5']} className={styles['join-button']} onClick = {() => joinPrivateRoom(5)}>Join</div>
           ) : (
-            <div id = {styles['player-5']} className={styles['join-button']}>Joined</div>
+            <div id = {styles['player-5']} className={styles['join-button']}>{joinedPlayers.has(5) ? 'Joined' : 'Open'}</div>
           )}
         </div>
         <div id = {styles['game-middle-section']} className = {styles['section']}>
-          { !joinedPlayers.has(1) ? (
+          { !joinedPlayers.has(1) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-1']} className={styles['join-button']} onClick = {() => joinPrivateRoom(1)}>Join</div>
           ) : (
-            <div id = {styles['player-1']} className={styles['join-button']}>Joined</div>
+            <div id = {styles['player-1']} className={styles['join-button']}>{joinedPlayers.has(1) ? 'Joined' : 'Open'}</div>
           )}
           <div id = {styles['share-link-container']}>
             <div id = {styles['share-link']}>Share this link with your friends:</div>
@@ -185,10 +208,10 @@ const Game = () => {
               {copied ? 'Linked Copied!' : 'Copy Link'}
             </div>
           </div>
-          { !joinedPlayers.has(2) ? (
+          { !joinedPlayers.has(2) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-2']} className={styles['join-button']} onClick = {() => joinPrivateRoom(2)}>Join</div>
           ) : (
-            <div id = {styles['player-2']} className={styles['join-button']}>Joined</div>
+            <div id = {styles['player-2']} className={styles['join-button']}>{joinedPlayers.has(2) ? 'Joined' : 'Open'}</div>
           )}
         </div>
         <div id = {styles['game-bottom-section']} className = {styles['section']}>
