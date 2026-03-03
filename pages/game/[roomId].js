@@ -44,14 +44,19 @@ const Game = () => {
     console.log("RoomId updated",roomId);
   }, [roomId]);
 
+  // Join the Socket.IO room when the page loads
+  useEffect(() => {
+    if (!roomId || !socket) return;
+
+    socket.emit('joinRoom', { roomId, userId, playerPosition: null });
+    console.log("Joined Socket.IO room:", roomId);
+  }, [roomId, socket]);
+
   // Fetch existing players when the page loads via socket
   useEffect(() => {
     if (!roomId || !socket) return;
 
-    // Ask the server for current players in the room
-    socket.emit('getPlayersInRoom', { roomId });
-
-    // Listen for the server's response
+    // Listen for the server's response (register BEFORE emitting)
     const handleRoomPlayers = (data) => {
       console.log("Received room players:", data);
       if (data.players) {
@@ -61,6 +66,9 @@ const Game = () => {
     };
 
     socket.on('playersInRoomResponse', handleRoomPlayers);
+
+    // Ask the server for current players in the room
+    socket.emit('getPlayersInRoom', { roomId });
 
     return () => {
       socket.off('playersInRoomResponse', handleRoomPlayers);
@@ -73,7 +81,7 @@ const Game = () => {
 
     const handlePlayerJoined = (data) => {
       console.log("Player joined event received:", data);
-      if (data.playerPosition !== undefined) {
+      if (data.playerPosition !== undefined && data.playerPosition !== null) {
         setJoinedPlayers(prev => new Set(prev).add(data.playerPosition));
       }
     };
@@ -120,7 +128,7 @@ const Game = () => {
       if(response.roomUpdated)
       {
         console.log("Player joined");
-        socket.emit('playerJoined', { roomId, userId, playerPosition });
+        socket.emit('joinRoom', { roomId, userId, playerPosition });
         setPlayerJoined(true);
         setPlayerPosition(playerPosition);
         // Also update joinedPlayers for this position
