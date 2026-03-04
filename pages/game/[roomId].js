@@ -15,7 +15,7 @@ const Game = () => {
   const [ roomId, setRoomId] = useState(null);
   const [ playerJoined, setPlayerJoined ] = useState(false);
   const [ playerPosition, setPlayerPosition ] = useState(null);
-  const [ joinedPlayers, setJoinedPlayers ] = useState(() => new Set());
+  const [ joinedPlayers, setJoinedPlayers ] = useState(() => new Map());
   const [ userId ] = useState(() => {
     // Get or create userId from localStorage
     if (typeof window !== 'undefined') {
@@ -60,7 +60,7 @@ const Game = () => {
     const handleRoomPlayers = (data) => {
       console.log("Received room players:", data);
       if (data.players) {
-        const positions = new Set(data.players.map(player => player.playerPosition));
+        const positions = new Map(data.players.map(player => [player.playerPosition, player.socketId]));
         setJoinedPlayers(positions);
       }
     };
@@ -82,14 +82,27 @@ const Game = () => {
     const handlePlayerJoined = (data) => {
       console.log("Player joined event received:", data);
       if (data.playerPosition !== undefined && data.playerPosition !== null) {
-        setJoinedPlayers(prev => new Set(prev).add(data.playerPosition));
+        setJoinedPlayers(prev => new Map(prev).set(data.playerPosition, data.socketId));
+      }
+    };
+
+    const handlePlayerDisconnected = (data) => {
+      console.log("Player disconnected event received:", data);
+      if (data.playerPosition !== undefined && data.playerPosition !== null) {
+        setJoinedPlayers(prev => {
+          const updated = new Map(prev);
+          updated.delete(data.playerPosition);
+          return updated;
+        });
       }
     };
 
     socket.on('playerJoined', handlePlayerJoined);
+    socket.on('playerDisconnected', handlePlayerDisconnected);
 
     return () => {
       socket.off('playerJoined', handlePlayerJoined);
+      socket.off('playerDisconnected', handlePlayerDisconnected);
     };
   }, [socket]);
 
@@ -132,7 +145,7 @@ const Game = () => {
         setPlayerJoined(true);
         setPlayerPosition(playerPosition);
         // Also update joinedPlayers for this position
-        setJoinedPlayers(prev => new Set(prev).add(playerPosition));
+        setJoinedPlayers(prev => new Map(prev).set(playerPosition, socket.id));
       }
       else{
         console.log(response.message);
@@ -191,24 +204,24 @@ const Game = () => {
           { !joinedPlayers.has(3) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-3']} className={styles['join-button']} onClick = {() => joinPrivateRoom(3)}>Join</div>
           ) : (
-            <div id = {styles['player-3']} className={styles['join-button']}>{joinedPlayers.has(3) ? 'Joined' : 'Open'}</div>
+            <div id = {styles['player-3']} className={styles['join-button']}>{joinedPlayers.has(3) ? joinedPlayers.get(3) : 'Open'}</div>
           )}
           { !joinedPlayers.has(4) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-4']} className={styles['join-button']} onClick = {() => joinPrivateRoom(4)}>Join</div>
           ) : (
-            <div id = {styles['player-4']} className={styles['join-button']}>{joinedPlayers.has(4) ? 'Joined' : 'Open'}</div>
+            <div id = {styles['player-4']} className={styles['join-button']}>{joinedPlayers.has(4) ? joinedPlayers.get(4) : 'Open'}</div>
           )}
           { !joinedPlayers.has(5) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-5']} className={styles['join-button']} onClick = {() => joinPrivateRoom(5)}>Join</div>
           ) : (
-            <div id = {styles['player-5']} className={styles['join-button']}>{joinedPlayers.has(5) ? 'Joined' : 'Open'}</div>
+            <div id = {styles['player-5']} className={styles['join-button']}>{joinedPlayers.has(5) ? joinedPlayers.get(5) : 'Open'}</div>
           )}
         </div>
         <div id = {styles['game-middle-section']} className = {styles['section']}>
           { !joinedPlayers.has(1) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-1']} className={styles['join-button']} onClick = {() => joinPrivateRoom(1)}>Join</div>
           ) : (
-            <div id = {styles['player-1']} className={styles['join-button']}>{joinedPlayers.has(1) ? 'Joined' : 'Open'}</div>
+            <div id = {styles['player-1']} className={styles['join-button']}>{joinedPlayers.has(1) ? joinedPlayers.get(1) : 'Open'}</div>
           )}
           <div id = {styles['share-link-container']}>
             <div id = {styles['share-link']}>Share this link with your friends:</div>
@@ -219,7 +232,7 @@ const Game = () => {
           { !joinedPlayers.has(2) && !isAdmin && !playerJoined ? (
             <div id = {styles['player-2']} className={styles['join-button']} onClick = {() => joinPrivateRoom(2)}>Join</div>
           ) : (
-            <div id = {styles['player-2']} className={styles['join-button']}>{joinedPlayers.has(2) ? 'Joined' : 'Open'}</div>
+            <div id = {styles['player-2']} className={styles['join-button']}>{joinedPlayers.has(2) ? joinedPlayers.get(2) : 'Open'}</div>
           )}
         </div>
         <div id = {styles['game-bottom-section']} className = {styles['section']}>
